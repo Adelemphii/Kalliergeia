@@ -6,6 +6,8 @@ import me.adelemphii.kalliergeia.events.*;
 import me.adelemphii.kalliergeia.utils.storage.SQLManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
+
 public final class Kalliergeia extends JavaPlugin {
 
     // instance of the SQL class to access through DI in other classes
@@ -34,8 +36,8 @@ public final class Kalliergeia extends JavaPlugin {
     }
 
     private void registerCommands() {
-        getCommand("kalliergeia").setExecutor(new SettingsCommand(this));
-        getCommand("kalliergeia").setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("kalliergeia")).setExecutor(new SettingsCommand(this));
+        Objects.requireNonNull(getCommand("kalliergeia")).setTabCompleter(new TabCompletion());
     }
 
     private void registerEvents() {

@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -27,7 +28,9 @@ public class HoeFarmingListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    // Obviously this wont log in any logging plugins, but it could easily be set up to do so
+    // lowest priority, yet it still bypasses /co i in coreprotect, I give up.
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onHoeFarming(PlayerInteractEvent event) {
 
         if(event.getHand() == EquipmentSlot.OFF_HAND) return;
