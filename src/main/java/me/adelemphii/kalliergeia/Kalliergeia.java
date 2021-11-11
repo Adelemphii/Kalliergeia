@@ -1,24 +1,53 @@
 package me.adelemphii.kalliergeia;
 
+import me.adelemphii.kalliergeia.commands.SettingsCommand;
+import me.adelemphii.kalliergeia.commands.TabCompletion;
+import me.adelemphii.kalliergeia.events.CropTrampleListener;
+import me.adelemphii.kalliergeia.events.HoeFarmingListener;
+import me.adelemphii.kalliergeia.events.PistonBreakCropListener;
+import me.adelemphii.kalliergeia.events.PlayerJoinListener;
+import me.adelemphii.kalliergeia.utils.filestorage.SQLManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Kalliergeia extends JavaPlugin {
 
+    SQLManager sqlManager;
+
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+
         registerCommands();
         registerEvents();
+
+        // BEGIN SQL COLLECTION
+        this.getLogger().info("Starting SQL Manager...");
+        sqlManager = new SQLManager(this);
+        sqlManager.collectAllUsersFromTable();
+        // END SQL COLLECTION
     }
 
     @Override
     public void onDisable() {
+        // BEGIN SQL SAVING
+        this.getLogger().info("Saving UserSettings in SQL Manager...");
+        sqlManager.saveToPlayerTable();
+        // END SQL SAVING
     }
 
     private void registerCommands() {
-
+        getCommand("kalliergeia").setExecutor(new SettingsCommand(this));
+        getCommand("kalliergeia").setTabCompleter(new TabCompletion());
     }
 
     private void registerEvents() {
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+        getServer().getPluginManager().registerEvents(new CropTrampleListener(this), this);
+        getServer().getPluginManager().registerEvents(new HoeFarmingListener(this), this);
+        getServer().getPluginManager().registerEvents(new PistonBreakCropListener(this), this);
+    }
 
+    public SQLManager getSQLManager() {
+        return sqlManager;
     }
 }

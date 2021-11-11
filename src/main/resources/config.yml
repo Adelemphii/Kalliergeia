@@ -1,0 +1,2 @@
+# Disables pistons from pulling/pushing farmland/crops
+disable-piston-crop-breaking: true

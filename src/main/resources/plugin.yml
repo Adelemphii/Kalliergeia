@@ -1,4 +1,8 @@
 name: Kalliergeia
 version: '${project.version}'
 main: me.adelemphii.kalliergeia.Kalliergeia
-api-version: 1.17
+api-version: 1.13
+
+commands:
+  kalliergeia:
+    aliases: k
