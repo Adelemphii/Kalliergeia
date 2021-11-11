@@ -1,4 +1,4 @@
-package me.adelemphii.kalliergeia.utils.filestorage;
+package me.adelemphii.kalliergeia.utils.storage;
 
 import me.adelemphii.kalliergeia.Kalliergeia;
 
@@ -10,7 +10,8 @@ import java.util.logging.Level;
 public class SQLManager {
 
     private final Kalliergeia plugin;
-    private Map<String, UserSettings> players = new HashMap<>();
+    // the player settings data map
+    private Map<String, UserSettings> playersSettings = new HashMap<>();
 
     private String url;
 
@@ -23,19 +24,18 @@ public class SQLManager {
 
     private static Connection connection;
 
-    public boolean connect() {
+    // connect to the database
+    public void connect() {
         if(!isConnected()) {
             try {
                 connection = DriverManager.getConnection(url);
-                return true;
             } catch (SQLException e) {
                 e.printStackTrace();
-                return false;
             }
         }
-        return true;
     }
 
+    // close the connection
     public boolean disconnect() {
         if(isConnected()) {
             try {
@@ -48,6 +48,7 @@ public class SQLManager {
         return true;
     }
 
+    // create the player table
     private void createPlayerTable() {
         String sql = """
                 CREATE TABLE IF NOT EXISTS users (
@@ -67,7 +68,7 @@ public class SQLManager {
     }
 
     public void saveToPlayerTable() {
-        if(players.isEmpty()) {
+        if(playersSettings.isEmpty()) {
             return;
         }
 
@@ -75,7 +76,7 @@ public class SQLManager {
                 "VALUES(?,?,?)";
 
         if(isConnected()) {
-            players.forEach((uuid, settings) -> {
+            playersSettings.forEach((uuid, settings) -> {
                 try(PreparedStatement stmt = connection.prepareStatement(sql)) {
                     stmt.setString(1, settings.getUUID());
                     stmt.setBoolean(2, settings.isCropTrample());
@@ -124,7 +125,7 @@ public class SQLManager {
                     boolean autoReplant = rs.getBoolean("autoReplant");
 
                     UserSettings settings = new UserSettings(uuid, isCropTrample, autoReplant);
-                    players.put(uuid, settings);
+                    playersSettings.put(uuid, settings);
                 }
 
                 plugin.getLogger().info("Successfully collected users to hashmap.");
@@ -146,23 +147,23 @@ public class SQLManager {
         return connection;
     }
 
-    public Map<String, UserSettings> getPlayers() {
-        return players;
+    public Map<String, UserSettings> getPlayersSettings() {
+        return playersSettings;
     }
 
     public UserSettings getPlayer(String uuid) {
-        return players.get(uuid);
+        return playersSettings.get(uuid);
     }
 
     public void addPlayer(UserSettings player) {
-        players.put(player.getUUID(), player);
+        playersSettings.put(player.getUUID(), player);
     }
 
     public void removePlayer(String uuid) {
-        players.remove(uuid);
+        playersSettings.remove(uuid);
     }
 
-    public void setPlayers(Map<String, UserSettings> players) {
-        this.players = players;
+    public void setPlayersSettings(Map<String, UserSettings> playersSettings) {
+        this.playersSettings = playersSettings;
     }
 }

@@ -42,11 +42,23 @@ public class HoeFarmingListener implements Listener {
             // If the block has age, it's a block we need
             if (block.getBlockData() instanceof Ageable age) {
 
+                // we don't care about blocks that are not fully grown, since they don't yield any crops
                 if(age.getAge() != age.getMaximumAge()) return;
 
                 if(HoeTypes.getType(item.getType()) == HoeTypes.HAND) {
-                    block.setType(Material.AIR);
+                    block.setType(Material.AIR); // hands don't have any yield
                 } else {
+
+                    // get the fortune level for the hoe, if not found, set it to 0
+                    // then get the crop type for the block, if not found, return
+                    // for each itemstack in Block#getDrops() compare its type to the crop type and
+                    // if it matches, set the yield to the hoe level yield
+                    // after, calculate the seed yield approximately the same way Minecraft does it (binomial distribution)
+                    // then set the block to air and drop the seeds/yield if autoReplant is disabled
+
+                    // if autoReplant is enabled, set the block's age to 1 and drop the seeds/yield
+                    // also damages the hoe
+
                     int yield = HoeTypes.getType(item.getType()).getYield();
 
                     int fortuneLevel = 0;
@@ -58,7 +70,7 @@ public class HoeFarmingListener implements Listener {
 
                     AtomicBoolean hasSeedHappened = new AtomicBoolean(false);
                     block.getDrops().forEach(itemStack -> {
-                        CropTypes cropType = CropTypes.checkCropType(itemStack.getType());
+                        CropTypes cropType = CropTypes.matchType(itemStack.getType());
                         if(cropType == null) return;
 
                         if(itemStack.getType() == cropType.getCropType()) {
@@ -91,6 +103,8 @@ public class HoeFarmingListener implements Listener {
     }
     // check if the item meta is an instance of damageable then damage the tool
     // smth aint right with this
+
+    // takes into consideration if the hoe is enchanted with unbreaking or not, using a similar method as Minecraft
     private void damageTool(ItemStack item, int amount) {
         if(item.getItemMeta() instanceof Damageable damageable) {
 
@@ -130,7 +144,6 @@ public class HoeFarmingListener implements Listener {
             if(damageable.getDamage() > item.getType().getMaxDurability()) {
                 item.setAmount(0);
             }
-
             damageable.setDamage(damageable.getDamage() + amount);
             item.setItemMeta(damageable);
         }

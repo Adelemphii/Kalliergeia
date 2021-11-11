@@ -11,7 +11,9 @@ public enum HoeTypes {
     GOLD_HOE(Material.GOLDEN_HOE, 2),
     DIAMOND_HOE(Material.DIAMOND_HOE, 3);
 
+    // The material of the hoe
     private final Material material;
+    // The amount of crop to drop
     private final int yield;
 
     HoeTypes(Material material, int yield) {
@@ -27,7 +29,11 @@ public enum HoeTypes {
         return yield;
     }
 
-    // get hoetype from material
+    /**
+     * Gets the HoeType from the Material
+     * @param material The Material to get the HoeType from
+     * @return The HoeType of the Material
+     */
     public static HoeTypes getType(Material material) {
         if(material == null) return HAND;
 

@@ -13,14 +13,15 @@ public enum CropTypes {
     CARROTS(0, 3, Material.CARROTS, Material.CARROTS),
     POTATO(1, 3, Material.POTATO, Material.POTATO),
     POTATOES(1, 3, Material.POTATOES, Material.POTATOES),
-    MELON(0, 3, Material.MELON_SEEDS, Material.MELON),
-    PUMPKIN(0, 0, Material.PUMPKIN_SEEDS, Material.PUMPKIN),
-    COCOA(0, 0, Material.COCOA_BEANS, Material.COCOA),
     NETHERWART(0, 0, Material.NETHER_WART, Material.NETHER_WART);
 
+    // minimum number of seeds to produce
     private final int dropMin;
+    // maximum number of seeds to produce
     private final int dropMax;
+    // material of the seed
     private final Material seedType;
+    // material of the crop
     private final Material cropType;
 
     CropTypes(int dropMin, int dropMax, Material seedType, Material cropType) {
@@ -46,16 +47,12 @@ public enum CropTypes {
         return cropType;
     }
 
-    public ItemStack getSeed() {
-        return new ItemStack(seedType);
-    }
-
-    public ItemStack getCrop() {
-        return new ItemStack(cropType);
-    }
-
-    // get crop type based off seeds or crop
-    public static CropTypes checkCropType(Material item) {
+    /**
+     * Get the crop type based off the seed/yield material
+     * @param item ItemStack of the seed/yield
+     * @return CropTypes of the seed/yield
+     */
+    public static CropTypes matchType(Material item) {
         for (CropTypes crop : CropTypes.values()) {
             if (item == crop.getCropType() || item == crop.getSeedType()) {
                 return crop;
@@ -64,9 +61,13 @@ public enum CropTypes {
         return null;
     }
 
-    // get extra seed amount based on binomial distribution
+    /**
+     * Get a random number of seeds to drop based on binomial distribution
+     * @param crop The crop type to access the dropMin/dropMax
+     * @param fortune fortune level of the hoe used to break the crop
+     * @return number of seeds to drop
+     */
     public static int getSeedDropAmount(CropTypes crop, int fortune) {
-        Random random = new Random();
 
         int extra = 0;
         for (int i = 0; i < 1 + fortune; i++) {

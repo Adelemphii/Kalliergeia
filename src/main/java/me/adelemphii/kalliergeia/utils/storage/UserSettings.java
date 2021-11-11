@@ -1,4 +1,4 @@
-package me.adelemphii.kalliergeia.utils.filestorage;
+package me.adelemphii.kalliergeia.utils.storage;
 
 public class UserSettings {
 

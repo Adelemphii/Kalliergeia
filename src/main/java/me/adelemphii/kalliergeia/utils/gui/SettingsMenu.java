@@ -40,6 +40,8 @@ public class SettingsMenu {
         ItemStack autoReplantDisabled = createNewButton(Material.RED_WOOL, "&cAuto Replant Disabled");
 
         if(plugin.getSQLManager().getPlayer(player.getUniqueId().toString()).isCropTrample()) {
+            // if the player has crop trample enabled, set the button to green
+            // if the player clicks the button, it will set the player's crop trample to false
             pane.addItem(new GuiItem(cropTrampleEnabled, event -> {
                 cropTrampleEnabled.setType(Material.RED_WOOL);
 
@@ -54,6 +56,8 @@ public class SettingsMenu {
                 player.closeInventory();
             }), 0, 0);
         } else {
+            // if the player has crop trample disabled, set the button to red
+            // if the player clicks the button, it will set the player's crop trample to true
             pane.addItem(new GuiItem(cropTrampleDisabled, event -> {
                 cropTrampleDisabled.setType(Material.LIME_WOOL);
 
@@ -71,6 +75,8 @@ public class SettingsMenu {
         }
 
         if(plugin.getSQLManager().getPlayer(player.getUniqueId().toString()).isAutoReplant()) {
+            // if the player has auto-replant enabled, set the button to green
+            // if the player clicks the button, it will set the player's auto-replant to false
             pane.addItem(new GuiItem(autoReplantEnabled, event -> {
                 autoReplantEnabled.setType(Material.RED_WOOL);
 
@@ -85,6 +91,8 @@ public class SettingsMenu {
                 player.closeInventory();
             }), 1, 0);
         } else {
+            // if the player has auto-replant disabled, set the button to red
+            // if the player clicks the button, it will set the player's auto-replant to true
             pane.addItem(new GuiItem(autoReplantDisabled, event -> {
                 autoReplantDisabled.setType(Material.LIME_WOOL);
 
@@ -107,6 +115,7 @@ public class SettingsMenu {
 
     }
 
+    // creates an itemstack with the given material and name
     private ItemStack createNewButton(Material material, String name) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();

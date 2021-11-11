@@ -19,11 +19,13 @@ public class PistonBreakCropListener implements Listener {
 
     @EventHandler
     public void onPistonExtend(BlockPistonExtendEvent event) {
+
+        // Prevents pistons from pushing crops/farmland, therefore breaking them, if enabled in config.
         if(!plugin.getConfig().getBoolean("disable-piston-crop-breaking")) return;
 
         for(Block block : event.getBlocks()) {
-            if(CropTypes.checkCropType(block.getType()) != null || block.getType() == Material.FARMLAND) {
-                System.out.println(CropTypes.checkCropType(block.getType()));
+            if(CropTypes.matchType(block.getType()) != null || block.getType() == Material.FARMLAND) {
+                System.out.println(CropTypes.matchType(block.getType()));
                 event.setCancelled(true);
             }
         }
@@ -31,11 +33,13 @@ public class PistonBreakCropListener implements Listener {
 
     @EventHandler
     public void onPistonRetract(BlockPistonRetractEvent event) {
+
+        // Prevents pistons from pulling crops/farmland, therefore breaking them, if enabled in config.
         if(!plugin.getConfig().getBoolean("disable-piston-crop-breaking")) return;
 
         for(Block block : event.getBlocks()) {
-            if(CropTypes.checkCropType(block.getType()) != null || block.getType() == Material.FARMLAND) {
-                System.out.println(CropTypes.checkCropType(block.getType()));
+            if(CropTypes.matchType(block.getType()) != null || block.getType() == Material.FARMLAND) {
+                System.out.println(CropTypes.matchType(block.getType()));
                 event.setCancelled(true);
             }
         }

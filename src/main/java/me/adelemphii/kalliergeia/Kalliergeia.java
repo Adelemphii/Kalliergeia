@@ -2,15 +2,13 @@ package me.adelemphii.kalliergeia;
 
 import me.adelemphii.kalliergeia.commands.SettingsCommand;
 import me.adelemphii.kalliergeia.commands.TabCompletion;
-import me.adelemphii.kalliergeia.events.CropTrampleListener;
-import me.adelemphii.kalliergeia.events.HoeFarmingListener;
-import me.adelemphii.kalliergeia.events.PistonBreakCropListener;
-import me.adelemphii.kalliergeia.events.PlayerJoinListener;
-import me.adelemphii.kalliergeia.utils.filestorage.SQLManager;
+import me.adelemphii.kalliergeia.events.*;
+import me.adelemphii.kalliergeia.utils.storage.SQLManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Kalliergeia extends JavaPlugin {
 
+    // instance of the SQL class to access through DI in other classes
     SQLManager sqlManager;
 
     @Override
@@ -20,7 +18,7 @@ public final class Kalliergeia extends JavaPlugin {
         registerCommands();
         registerEvents();
 
-        // BEGIN SQL COLLECTION
+        // BEGIN SQL COLLECTION - Loads every user's settings from the database
         this.getLogger().info("Starting SQL Manager...");
         sqlManager = new SQLManager(this);
         sqlManager.collectAllUsersFromTable();
@@ -29,7 +27,7 @@ public final class Kalliergeia extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // BEGIN SQL SAVING
+        // BEGIN SQL SAVING - Saves every user's settings to the database
         this.getLogger().info("Saving UserSettings in SQL Manager...");
         sqlManager.saveToPlayerTable();
         // END SQL SAVING
@@ -45,6 +43,7 @@ public final class Kalliergeia extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CropTrampleListener(this), this);
         getServer().getPluginManager().registerEvents(new HoeFarmingListener(this), this);
         getServer().getPluginManager().registerEvents(new PistonBreakCropListener(this), this);
+        getServer().getPluginManager().registerEvents(new BreakDirtUnderCropListener(), this);
     }
 
     public SQLManager getSQLManager() {

@@ -18,6 +18,7 @@ public class CropTrampleListener implements Listener {
 
     @EventHandler
     public void onCropTrample(PlayerInteractEvent event) {
+        // Prevents the player from trampling crops if they have the setting disabled
         if(event.getAction() == Action.PHYSICAL) {
             if(event.getClickedBlock() == null) return;
 
