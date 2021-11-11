@@ -1,0 +1,4 @@
+name: Kalliergeia
+version: '${project.version}'
+main: me.adelemphii.kalliergeia.Kalliergeia
+api-version: 1.17
