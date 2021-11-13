@@ -29,7 +29,6 @@ public class HoeFarmingListener implements Listener {
     }
 
     // Obviously this wont log in any logging plugins, but it could easily be set up to do so
-    // lowest priority, yet it still bypasses /co i in coreprotect, I give up.
     @EventHandler
     public void onHoeFarming(PlayerInteractEvent event) {
 
