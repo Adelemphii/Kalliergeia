@@ -30,7 +30,7 @@ public class HoeFarmingListener implements Listener {
 
     // Obviously this wont log in any logging plugins, but it could easily be set up to do so
     // lowest priority, yet it still bypasses /co i in coreprotect, I give up.
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onHoeFarming(PlayerInteractEvent event) {
 
         if(event.getHand() == EquipmentSlot.OFF_HAND) return;
@@ -64,12 +64,7 @@ public class HoeFarmingListener implements Listener {
 
                     int yield = HoeTypes.getType(item.getType()).getYield();
 
-                    int fortuneLevel = 0;
-                    if(item.getEnchantments().containsKey(Enchantment.LOOT_BONUS_BLOCKS)) {
-                        fortuneLevel = item.getEnchantments().get(Enchantment.LOOT_BONUS_BLOCKS);
-                    }
-
-                    int finalFortuneLevel = fortuneLevel;
+                    int fortuneLevel = item.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS);
 
                     AtomicBoolean hasSeedHappened = new AtomicBoolean(false);
                     block.getDrops().forEach(itemStack -> {
@@ -80,7 +75,7 @@ public class HoeFarmingListener implements Listener {
                             itemStack.setAmount(yield);
                         }
                         if(itemStack.getType() == cropType.getSeedType() && !hasSeedHappened.get()) {
-                            int amount = CropTypes.getSeedDropAmount(cropType, finalFortuneLevel);
+                            int amount = CropTypes.getSeedDropAmount(cropType, fortuneLevel);
 
                             itemStack.setAmount(amount);
                             hasSeedHappened.set(true);
@@ -111,10 +106,7 @@ public class HoeFarmingListener implements Listener {
     private void damageTool(ItemStack item, int amount) {
         if(item.getItemMeta() instanceof Damageable damageable) {
 
-            int enchantLevel = 0;
-            if(item.getEnchantments().containsKey(Enchantment.DURABILITY)) {
-                enchantLevel = item.getEnchantments().get(Enchantment.DURABILITY);
-            }
+            int enchantLevel = item.getEnchantmentLevel(Enchantment.DURABILITY);
 
             if(enchantLevel > 0) {
                 int newDamage = damageable.getDamage() + amount;
