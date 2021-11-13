@@ -114,25 +114,24 @@ public class HoeFarmingListener implements Listener {
                 int n = rand.nextInt(100) + 1;
 
                 switch(enchantLevel) {
-                    case 1:
-                        if(n <= 50) {
+                    case 1 -> {
+                        if (n <= 50) {
                             damageable.setDamage(newDamage);
                         }
-                        break;
-                    case 2:
-                        if(n <= 33) {
+                    }
+                    case 2 -> {
+                        if (n <= 33) {
                             damageable.setDamage(newDamage);
                         }
-                        break;
-                    case 3:
+                    }
+                    case 3 -> {
                         if(n <= 25) {
                             damageable.setDamage(newDamage);
                         }
-                        break;
-                    default:
-                        damageable.setDamage(newDamage);
+                    }
                 }
                 item.setItemMeta(damageable);
+                return;
             }
 
             if(damageable.getDamage() > item.getType().getMaxDurability()) {
