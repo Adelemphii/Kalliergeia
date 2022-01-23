@@ -26,7 +26,7 @@ public class PistonBreakCropListener implements Listener {
         for(Block block : event.getBlocks()) {
             if(CropTypes.matchType(block.getType()) != null || block.getType() == Material.FARMLAND) {
                 System.out.println(CropTypes.matchType(block.getType()));
-                event.setCancelled(true);
+                event.setCancelled(true); // would prefer if this set the block above to AIR instead
             }
         }
     }

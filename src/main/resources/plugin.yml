@@ -6,3 +6,4 @@ api-version: 1.13
 commands:
   kalliergeia:
     aliases: k
+    # a usage: key would be good here for when the command has a negative return

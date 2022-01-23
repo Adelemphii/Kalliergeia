@@ -75,15 +75,15 @@ public class SQLManager {
         String sql = "INSERT INTO users(uuid,isCropTrample,autoReplant) " +
                 "VALUES(?,?,?)";
 
-        if(isConnected()) {
+        if(isConnected()) { // these checks aren't really needed, there is no instance when the connection would be dropped, just add a cll to connect() on startup
             playersSettings.forEach((uuid, settings) -> {
                 try(PreparedStatement stmt = connection.prepareStatement(sql)) {
                     stmt.setString(1, settings.getUUID());
                     stmt.setBoolean(2, settings.isCropTrample());
-
+                    stmt.setBoolean(3, settings.isAutoReplant());
                     stmt.executeUpdate();
                 } catch (SQLException throwables) {
-                    updatePlayerInTable(uuid, settings);
+                    updatePlayerInTable(uuid, settings); // i don't love this method as it could silence actual errors in the SQL
                 }
             });
         } else {
@@ -97,9 +97,10 @@ public class SQLManager {
 
         if(isConnected()) {
             try(PreparedStatement stmt = connection.prepareStatement(sql)) {
+                // parameter order was wrong causing update to not do anything
                 stmt.setBoolean(1, settings.isCropTrample());
-                stmt.setString(2, uuid);
-                stmt.setBoolean(3, settings.isAutoReplant());
+                stmt.setBoolean(2, settings.isAutoReplant());
+                stmt.setString(3, settings.getUUID());
 
                 stmt.executeUpdate();
             } catch (SQLException e) {

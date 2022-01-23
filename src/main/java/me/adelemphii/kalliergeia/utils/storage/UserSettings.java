@@ -17,6 +17,7 @@ public class UserSettings {
         this.UUID = UUID;
     }
 
+    // Consider using lombok for these kind of things, it's really useful
     public String getUUID() {
         return UUID;
     }

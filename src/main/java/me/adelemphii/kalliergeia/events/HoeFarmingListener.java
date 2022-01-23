@@ -29,7 +29,7 @@ public class HoeFarmingListener implements Listener {
     }
 
     // Obviously this wont log in any logging plugins, but it could easily be set up to do so
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled = true) // adding this assures it works with world-protection plugins
     public void onHoeFarming(PlayerInteractEvent event) {
 
         if(event.getHand() == EquipmentSlot.OFF_HAND) return;
@@ -61,11 +61,13 @@ public class HoeFarmingListener implements Listener {
                     // if autoReplant is enabled, set the block's age to 1 and drop the seeds/yield
                     // also damages the hoe
 
-                    int yield = HoeTypes.getType(item.getType()).getYield();
+                    int yield = HoeTypes.getType(item.getType()).getYield(); // add fortune bonus to yield?
 
                     int fortuneLevel = item.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS);
 
                     AtomicBoolean hasSeedHappened = new AtomicBoolean(false);
+                    // Iterating through the drops makes this needlessly complicated, could use the block broken
+                    // to get the crop type instead, avoiding a good chunk of this logic and the use of the atomic boolean
                     block.getDrops().forEach(itemStack -> {
                         CropTypes cropType = CropTypes.matchType(itemStack.getType());
                         if(cropType == null) return;
@@ -74,6 +76,7 @@ public class HoeFarmingListener implements Listener {
                             itemStack.setAmount(yield);
                         }
                         if(itemStack.getType() == cropType.getSeedType() && !hasSeedHappened.get()) {
+                            // should not drop seeds on auto replant
                             int amount = CropTypes.getSeedDropAmount(cropType, fortuneLevel);
 
                             itemStack.setAmount(amount);
@@ -81,11 +84,12 @@ public class HoeFarmingListener implements Listener {
                         }
                         // java.lang.IllegalArgumentException: Cannot drop air
                         // idk anymore https://paste.md-5.net/diyajatuto.sql
-                        if(itemStack.getType() != Material.AIR) {
+                        if(itemStack.getType() != Material.AIR && itemStack.getAmount() > 0) { //stack size 0 turns it into AIR
                             block.getWorld().dropItemNaturally(block.getLocation(), itemStack);
                         }
                     });
-                    if(plugin.getSQLManager().getPlayer(event.getPlayer().getUniqueId().toString()).isAutoReplant()) {
+                    if(plugin.getSQLManager().getPlayer(event.getPlayer().getUniqueId().toString()).isAutoReplant()) { // the sql manager should really handle uuid -> string coversion
+                        // although this works, it is very easy to double clock a block when farming causing it to vanish, a check should be added to stop breaking on crops of any kind with a hoe if this is enabled
                         age.setAge(1);
                         block.setBlockData(age);
                     } else {

@@ -52,8 +52,8 @@ public class SettingsMenu {
                 plugin.getSQLManager().getPlayer(player.getUniqueId().toString()).setCropTrample(false);
 
                 ChatUtils.sendMessage(player, "Crop trampling has been disabled.");
-                gui.update();
-                player.closeInventory();
+                gui.update(); // why have this if you close right away?
+                player.closeInventory(); // nitpick - feels cleaner if this is removed from a UX perspective
             }), 0, 0);
         } else {
             // if the player has crop trample disabled, set the button to red

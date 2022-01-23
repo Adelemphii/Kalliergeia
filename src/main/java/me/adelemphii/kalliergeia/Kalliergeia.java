@@ -11,7 +11,7 @@ import java.util.Objects;
 public final class Kalliergeia extends JavaPlugin {
 
     // instance of the SQL class to access through DI in other classes
-    SQLManager sqlManager;
+    SQLManager sqlManager; // should be private
 
     @Override
     public void onEnable() {
@@ -36,7 +36,7 @@ public final class Kalliergeia extends JavaPlugin {
     }
 
     private void registerCommands() {
-        Objects.requireNonNull(getCommand("kalliergeia")).setExecutor(new SettingsCommand(this));
+        Objects.requireNonNull(getCommand("kalliergeia")).setExecutor(new SettingsCommand(this)); // no need to wrap these in requireNonNull checks?
         Objects.requireNonNull(getCommand("kalliergeia")).setTabCompleter(new TabCompletion());
     }
 

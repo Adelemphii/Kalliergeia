@@ -7,6 +7,7 @@ import java.util.Random;
 
 public enum CropTypes {
 
+    // I don't think crops that have the same seeds as crop should drop any seeds, but that's more of a design choice
     WHEAT(0, 3, Material.WHEAT_SEEDS, Material.WHEAT),
     BEETROOT(1, 4, Material.BEETROOT_SEEDS, Material.BEETROOT),
     CARROT(0, 3, Material.CARROT, Material.CARROT),

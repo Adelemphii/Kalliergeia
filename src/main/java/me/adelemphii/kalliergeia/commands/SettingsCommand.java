@@ -26,7 +26,7 @@ public class SettingsCommand implements CommandExecutor {
 
                 if (!player.hasPermission("kalliergeia.settings")) {
                     ChatUtils.errorMessage(player, "You don't have permission to use this command!");
-                    return false;
+                    return false; // should be return true since return false just outputs the command usage from plugin.yml
                 }
 
                 if (args.length == 0) {
